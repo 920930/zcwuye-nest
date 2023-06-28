@@ -1,26 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Injectable, HttpException, ForbiddenException } from '@nestjs/common';
+import { verify } from 'argon2';
+import { JwtService } from '@nestjs/jwt';
 
+import { CreateAuthDto } from './dto/create-auth.dto';
+import { AdminerService } from 'src/adminer/adminer.service';
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(private adminerService: AdminerService, private jwt: JwtService) {}
+  async login(info: CreateAuthDto) {
+    const adminer = await this.adminerService.findByPhone(info.phone);
+    if (!adminer) throw new HttpException('管理员不存在', 400);
+    const bool = await verify(adminer.password, info.password);
+    if (!bool) throw new ForbiddenException('管理员手机或者密码错误');
+    const token = this.jwt.signAsync({ id: adminer.id, name: adminer.name });
+    return `Bearer ${token}`;
   }
 
-  findAll() {
+  logout() {
     return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
   }
 }
