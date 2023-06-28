@@ -18,6 +18,7 @@ import { AuthController } from './auth.controller';
     //     };
     //   },
     // }),
+    // adminerService的model是全局设置了，这里无需引入adminerMOdel
   ],
   controllers: [AuthController],
   providers: [AuthService],

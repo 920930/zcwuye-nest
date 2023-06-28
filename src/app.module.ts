@@ -10,6 +10,7 @@ import { FormatInterceptor } from './app/interceptor/format.interceptor';
 import { AdminerModule } from './adminer/adminer.module';
 import { CompanyModule } from './company/company.module';
 import { RoleModule } from './role/role.module';
+import { MenuModule } from './menu/menu.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { RoleModule } from './role/role.module';
     AdminerModule,
     CompanyModule,
     RoleModule,
+    MenuModule,
   ],
   controllers: [],
   providers: [
