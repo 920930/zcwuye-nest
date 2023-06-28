@@ -5,10 +5,11 @@ import { JwtModule } from '@nestjs/jwt/dist';
 
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AuthGuard } from './guard/auth.guard';
-import { AppInterceptor } from './app.interceptor';
+import { AuthGuard } from './app/guard/auth.guard';
+import { FormatInterceptor } from './app/interceptor/format.interceptor';
 import { AdminerModule } from './adminer/adminer.module';
 import { CompanyModule } from './company/company.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { CompanyModule } from './company/company.module';
     AuthModule,
     AdminerModule,
     CompanyModule,
+    RoleModule,
   ],
   controllers: [],
   providers: [
@@ -54,7 +56,7 @@ import { CompanyModule } from './company/company.module';
     // 也可以在main.ts中全局使用这个，但推荐通过这里
     { provide: APP_GUARD, useClass: AuthGuard },
     // 统一返回格式
-    { provide: APP_INTERCEPTOR, useClass: AppInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: FormatInterceptor },
   ],
 })
 export class AppModule {}

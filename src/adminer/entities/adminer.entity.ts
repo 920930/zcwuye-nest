@@ -18,6 +18,9 @@ export class Adminer {
   })
   password: string;
 
+  @Column({ default: true })
+  state: boolean;
+
   @ManyToMany(() => Company, (type) => type.adminers)
   companies: Company[];
 

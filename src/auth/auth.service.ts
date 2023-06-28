@@ -9,7 +9,7 @@ export class AuthService {
   constructor(private adminerService: AdminerService, private jwt: JwtService) {}
   async login(info: CreateAuthDto) {
     const adminer = await this.adminerService.findByPhone(info.phone);
-    if (!adminer) throw new HttpException('管理员不存在', 400);
+    if (!adminer) throw new HttpException('管理员不存在或被禁止', 400);
     const bool = await verify(adminer.password, info.password);
     if (!bool) throw new ForbiddenException('管理员手机或者密码错误');
     const token = this.jwt.signAsync({ id: adminer.id, name: adminer.name });

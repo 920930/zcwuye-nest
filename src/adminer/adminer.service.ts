@@ -36,6 +36,11 @@ export class AdminerService {
   }
 
   findByPhone(phone: string) {
-    return this.adminerRepository.createQueryBuilder('adminer').where('adminer.phone=:phone', { phone }).addSelect('adminer.password').getOne();
+    return this.adminerRepository
+      .createQueryBuilder('adminer')
+      .where('adminer.phone=:phone', { phone })
+      .andWhere('adminer.state=true')
+      .addSelect('adminer.password')
+      .getOne();
   }
 }
