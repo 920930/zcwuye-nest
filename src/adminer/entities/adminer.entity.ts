@@ -1,5 +1,8 @@
-import { Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, BeforeInsert } from 'typeorm';
 import { hash } from 'argon2';
+import { Company } from '../../company/entities/company.entity';
+
+@Entity()
 export class Adminer {
   @PrimaryGeneratedColumn()
   id: number;
@@ -14,6 +17,9 @@ export class Adminer {
     select: false,
   })
   password: string;
+
+  @ManyToMany(() => Company, (type) => type.adminers)
+  companies: Company[];
 
   @BeforeInsert()
   async beforeInsert() {

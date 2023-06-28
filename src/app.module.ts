@@ -8,6 +8,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthGuard } from './guard/auth.guard';
 import { AppInterceptor } from './app.interceptor';
 import { AdminerModule } from './adminer/adminer.module';
+import { CompanyModule } from './company/company.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { AdminerModule } from './adminer/adminer.module';
     }),
     AuthModule,
     AdminerModule,
+    CompanyModule,
   ],
   controllers: [],
   providers: [
