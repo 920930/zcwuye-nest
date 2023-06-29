@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Adminer } from '../../adminer/entities/adminer.entity';
 
 @Entity()
@@ -15,9 +15,7 @@ export class Company {
   @Column({ comment: '区' })
   qu: string;
 
-  @Column({ comment: '号' })
-  num: string;
-
-  @ManyToMany(() => Adminer, (type) => type.companies)
+  @ManyToMany(() => Adminer, (adminer) => adminer.companies)
+  @JoinTable()
   adminers: Adminer[];
 }

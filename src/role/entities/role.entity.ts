@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { RoleType } from '../../app/enum/role.enum';
+import { Adminer } from '../../adminer/entities/adminer.entity';
 
 @Entity()
 export class Role {
@@ -11,4 +12,7 @@ export class Role {
 
   @Column({ comment: '角色中文标识' })
   title: string;
+
+  @OneToMany(() => Adminer, (adminer) => adminer.role)
+  adminers: Adminer[];
 }

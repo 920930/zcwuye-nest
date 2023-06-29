@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, BeforeInsert, ManyToOne } from 'typeorm';
 import { hash } from 'argon2';
 import { Company } from '../../company/entities/company.entity';
+import { Role } from '../../role/entities/role.entity';
 
 @Entity()
 export class Adminer {
@@ -10,7 +11,9 @@ export class Adminer {
   @Column()
   name: string;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   phone: string;
 
   @Column({
@@ -18,11 +21,19 @@ export class Adminer {
   })
   password: string;
 
-  @Column({ default: true })
-  state: boolean;
+  @Column({
+    default: '',
+  })
+  avatar: string;
 
-  @ManyToMany(() => Company, (type) => type.adminers)
+  @ManyToMany(() => Company, (company) => company.adminers)
   companies: Company[];
+
+  @ManyToOne(() => Role)
+  role: Role;
+
+  @Column({ default: true, comment: '管理员状态 1正常 0离职' })
+  state: boolean;
 
   @BeforeInsert()
   async beforeInsert() {
