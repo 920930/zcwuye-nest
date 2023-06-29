@@ -37,7 +37,17 @@ export class AdminerService {
   }
 
   findOne(id: number) {
-    return this.adminerRepository.findOneBy({ id });
+    return this.adminerRepository.findOne({
+      where: { id },
+      relations: ['role'],
+    });
+    // return this.adminerRepository
+    //   .createQueryBuilder('adminer')
+    //   .where('adminer.id=:id', { id })
+    //   .leftJoinAndSelect('adminer.role', 'role')
+    //   .leftJoinAndSelect('adminer.companies', 'company')
+    //   .select(['adminer', 'role.name', 'company.id'])
+    //   .getOne();
   }
 
   async update(id: number, updateAdminerDto: UpdateAdminerDto) {

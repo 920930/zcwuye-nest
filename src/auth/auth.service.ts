@@ -12,7 +12,7 @@ export class AuthService {
     if (!adminer) throw new HttpException('管理员不存在或被禁止', 400);
     const bool = await verify(adminer.password, info.password);
     if (!bool) throw new ForbiddenException('管理员手机或者密码错误');
-    const token = this.jwt.signAsync({ id: adminer.id, name: adminer.name });
+    const token = await this.jwt.signAsync({ id: adminer.id, name: adminer.name });
     return `Bearer ${token}`;
   }
 
