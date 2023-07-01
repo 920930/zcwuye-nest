@@ -14,7 +14,7 @@ export class CompanyService {
   }
 
   findAll() {
-    return `This action returns all company`;
+    return this.companyRepository.find();
   }
 
   async findOne(id: number) {

@@ -1,8 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, AfterLoad, JoinColumn } from 'typeorm';
 import { TMenu } from '../../app/enum/menu.type';
 
 @Entity()
-@Tree('closure-table')
 export class Menu {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,11 +18,22 @@ export class Menu {
   meta: TMenu;
 
   @Column({ type: 'simple-array' })
-  companyIds: number[];
+  company: number[];
 
-  @TreeChildren()
+  @ManyToOne(() => Menu, (menu) => menu.children)
+  parent: Menu;
+
+  @OneToMany(() => Menu, (menu) => menu.parent)
   children: Menu[];
 
-  @TreeParent()
-  parent: Menu;
+  @Column({
+    default: null,
+  })
+  parentId: number;
+
+  @AfterLoad()
+  afterLoad() {
+    this.company = this.company.map((item) => item - 0);
+    this.meta.roles = typeof this.meta.roles === 'string' ? JSON.parse(this.meta.roles) : this.meta.roles;
+  }
 }

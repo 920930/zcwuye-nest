@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, DefaultValuePipe } from '@nestjs/common';
 import { MenuService } from './menu.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
+import { TAdminer } from '../app/enum/typings';
 
 @Controller('menu')
 export class MenuController {
@@ -13,8 +14,9 @@ export class MenuController {
   }
 
   @Get()
-  findAll() {
-    return this.menuService.findAll();
+  findAll(@Query('companyId', new DefaultValuePipe(0), ParseIntPipe) companyId: number) {
+    console.log(companyId);
+    return this.menuService.findAll(companyId);
   }
 
   @Get(':id')

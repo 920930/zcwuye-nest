@@ -39,7 +39,7 @@ export class AdminerService {
   findOne(id: number) {
     return this.adminerRepository.findOne({
       where: { id },
-      relations: ['role'],
+      relations: ['role', 'companies'],
     });
     // return this.adminerRepository
     //   .createQueryBuilder('adminer')
