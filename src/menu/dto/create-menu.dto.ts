@@ -1,20 +1,17 @@
-import { IsArray, IsNotEmpty, IsNumber, ValidateIf } from 'class-validator';
-import { TMenu } from '../../app/enum/menu.type';
+import { IsArray, IsNotEmpty, IsNumber } from 'class-validator';
+import { TMeta } from '../../app/enum/menu.type';
+import { Menu } from '../entities/menu.entity';
 
 export class CreateMenuDto {
-  @IsNotEmpty()
-  path: string;
-
   @IsNotEmpty()
   name: string;
 
   @IsNotEmpty()
-  meta: TMenu;
+  meta: TMeta;
 
   @IsArray({ message: '请选择公司' })
   company: number[];
 
   @IsNumber()
-  @ValidateIf((obj, val) => val != null)
-  parentId?: number | null;
+  parent?: number | Menu | null;
 }

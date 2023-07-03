@@ -5,12 +5,13 @@ export const menuTrees = (menus: Menu[]) => {
     children = menus.filter((item) => item.parent);
 
   const toMenus = (parent: Menu[], children: Menu[]) => {
-    children.forEach((c, i) => {
-      parent.forEach((p, pi) => {
+    parent.forEach((p) => {
+      children.forEach((c, i) => {
         if (p.id === c.parent.id) {
+          const _c: Menu[] = JSON.parse(JSON.stringify(children));
+          _c.splice(i, 1);
+          toMenus([c], _c);
           p.children ? p.children.push(c) : (p.children = [c]);
-        } else {
-          c.parent && toMenus([c.parent], c.parent);
         }
       });
     });

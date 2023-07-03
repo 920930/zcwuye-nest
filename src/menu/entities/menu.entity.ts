@@ -1,13 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, AfterLoad, JoinColumn } from 'typeorm';
-import { TMenu } from '../../app/enum/menu.type';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, AfterLoad } from 'typeorm';
+import { TMeta } from '../../app/enum/menu.type';
 
 @Entity()
 export class Menu {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ comment: '路径' })
-  path: string;
 
   @Column({
     type: String,
@@ -15,7 +12,7 @@ export class Menu {
   name: string;
 
   @Column({ type: 'simple-json' })
-  meta: TMenu;
+  meta: TMeta;
 
   @Column({ type: 'simple-array' })
   company: number[];
@@ -25,11 +22,6 @@ export class Menu {
 
   @OneToMany(() => Menu, (menu) => menu.parent)
   children: Menu[];
-
-  @Column({
-    default: null,
-  })
-  parentId: number;
 
   @AfterLoad()
   afterLoad() {

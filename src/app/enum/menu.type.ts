@@ -1,6 +1,6 @@
 import { RoleType } from './role.enum';
 
-export type TMenu = {
+export type TMeta = {
   locale: string;
   requiresAuth: boolean;
   roles?: RoleType[];
