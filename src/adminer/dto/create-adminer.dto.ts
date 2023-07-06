@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsPhoneNumber, MinLength, MaxLength, IsBoolean, IsArray, IsInt } from 'class-validator';
+import { IsNotEmpty, IsPhoneNumber, MinLength, MaxLength, IsBoolean, IsArray, IsInt, IsOptional } from 'class-validator';
 import { Company } from '../../company/entities/company.entity';
 
 export class CreateAdminerDto {
@@ -12,7 +12,8 @@ export class CreateAdminerDto {
   @MinLength(5, { message: '密码至少5位数' })
   @MaxLength(20, { message: '密码不能超过20位数' })
   password: string;
-
+  // IsOptional 有则验证IsBoolean，无则不验证
+  @IsOptional()
   @IsBoolean()
   state: boolean;
 
