@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Put, Param, Delete, Query, ParseIntPipe, D
 import { MenuService } from './menu.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
+import { CreateMenuPipe } from './pipes/create-menu.pipe';
 
 @Controller('menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
   @Post()
-  create(@Body() createMenuDto: CreateMenuDto) {
+  create(@Body(new CreateMenuPipe()) createMenuDto: CreateMenuDto) {
     return this.menuService.create(createMenuDto);
   }
 
