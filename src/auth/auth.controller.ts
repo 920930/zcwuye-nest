@@ -13,7 +13,7 @@ export class AuthController {
     return this.authService.login(createAuthDto);
   }
 
-  @Post()
+  @Post('logout')
   logout() {
     return this.authService.logout();
   }

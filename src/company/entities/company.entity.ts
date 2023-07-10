@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Adminer } from '../../adminer/entities/adminer.entity';
+import { QuType } from '../../app/enum/company.enum';
 
 @Entity()
 export class Company {
@@ -14,6 +15,12 @@ export class Company {
 
   @Column({ comment: '区' })
   qu: string;
+
+  @Column({ type: 'enum', enum: QuType, default: QuType.NUM, comment: '区类型' })
+  qutype: QuType;
+
+  @Column({ default: true })
+  state: boolean;
 
   @ManyToMany(() => Adminer, (adminer) => adminer.companies)
   @JoinTable()

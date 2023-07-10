@@ -16,8 +16,10 @@ export class MenuService {
     if (typeof info.parent === 'number') {
       parent = await this.menuRepository.findOneBy({ id: info.parent });
     }
-
-    info.meta.roles.length === 0 && Reflect.deleteProperty(info.meta, 'roles');
+    if (info.meta.roles && info.meta.roles.length === 0) {
+      Reflect.deleteProperty(info.meta, 'roles');
+    }
+    Reflect.deleteProperty(info, 'id');
     const menu = this.menuRepository.create({ ...info, parent });
     this.menuRepository.save(menu);
     return 'This action adds a new menu';

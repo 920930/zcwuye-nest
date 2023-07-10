@@ -2,15 +2,17 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt/dist';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AuthGuard } from './app/guard/auth.guard';
-import { FormatInterceptor } from './app/interceptor/format.interceptor';
 import { AdminerModule } from './adminer/adminer.module';
 import { CompanyModule } from './company/company.module';
 import { RoleModule } from './role/role.module';
 import { MenuModule } from './menu/menu.module';
+
+import { AuthGuard } from './app/guard/auth.guard';
+import { RoleGuard } from './app/guard/role.guard';
+import { FormatInterceptor } from './app/interceptor/format.interceptor';
 
 @Module({
   imports: [
@@ -57,6 +59,7 @@ import { MenuModule } from './menu/menu.module';
     // 全局jwt身份验证token，通过auth/decorators/public 方法去除是否jwt验证
     // 也可以在main.ts中全局使用这个，但推荐通过这里
     { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: RoleGuard },
     // 统一返回格式
     { provide: APP_INTERCEPTOR, useClass: FormatInterceptor },
   ],

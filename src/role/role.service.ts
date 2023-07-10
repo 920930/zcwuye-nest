@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -9,7 +9,12 @@ import { Role } from './entities/role.entity';
 @Injectable()
 export class RoleService {
   constructor(@InjectRepository(Role) private roleRepository: Repository<Role>) {}
-  create(createRoleDto: CreateRoleDto) {
+  async create(createRoleDto: CreateRoleDto) {
+    const one = await this.roleRepository.findOneBy({ name: createRoleDto.name });
+    if (one) throw new ForbiddenException(`${createRoleDto.name}已存在`);
+    Reflect.deleteProperty(createRoleDto, 'id');
+    const role = this.roleRepository.create(createRoleDto);
+    await this.roleRepository.save(role);
     return 'This action adds a new role';
   }
 
@@ -21,7 +26,8 @@ export class RoleService {
     return await this.roleRepository.findOneBy({ id });
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
+  async update(id: number, updateRoleDto: UpdateRoleDto) {
+    await this.roleRepository.update(id, updateRoleDto);
     return `This action updates a #${id} role`;
   }
 

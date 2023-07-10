@@ -9,19 +9,26 @@ import { Company } from './entities/company.entity';
 @Injectable()
 export class CompanyService {
   constructor(@InjectRepository(Company) private companyRepository: Repository<Company>) {}
-  create(createCompanyDto: CreateCompanyDto) {
+  async create(createCompanyDto: CreateCompanyDto) {
+    Reflect.deleteProperty(createCompanyDto, 'id');
+    const company = this.companyRepository.create(createCompanyDto);
+    await this.companyRepository.save(company);
     return 'This action adds a new company';
   }
 
-  findAll() {
-    return this.companyRepository.find();
+  async findAll() {
+    return await this.companyRepository.find();
   }
 
   async findOne(id: number) {
     return await this.companyRepository.findOneBy({ id });
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
+  async update(id: number, updateCompanyDto: UpdateCompanyDto) {
+    const company = await this.companyRepository.findOneBy({ id });
+    this.companyRepository.merge(company, updateCompanyDto);
+    await this.companyRepository.save(company);
+    // this.companyRepository.update(id, updateCompanyDto);
     return `This action updates a #${id} company`;
   }
 
