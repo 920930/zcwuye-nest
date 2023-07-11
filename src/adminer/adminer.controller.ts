@@ -4,7 +4,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { AdminerService } from './adminer.service';
 import { CreateAdminerDto } from './dto/create-adminer.dto';
 import { UpdateAdminerDto } from './dto/update-adminer.dto';
-import { Public, ReqAdminer } from '../app/decorator/public.decorator';
+import { ReqAdminer } from '../app/decorator/public.decorator';
 import { TAdminer } from '../app/enum/typings';
 
 @Controller('adminer')
@@ -13,7 +13,6 @@ export class AdminerController {
 
   @Get('info')
   async me(@ReqAdminer() adminer: TAdminer) {
-    console.log(adminer);
     const one = await this.adminerService.findOne(adminer.id);
     return {
       ...one,
@@ -21,7 +20,6 @@ export class AdminerController {
     };
   }
 
-  @Public()
   @Post()
   create(@Body() createAdminerDto: CreateAdminerDto) {
     return this.adminerService.create(createAdminerDto);

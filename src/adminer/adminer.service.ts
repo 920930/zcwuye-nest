@@ -16,24 +16,25 @@ export class AdminerService {
     private roleService: RoleService,
   ) {}
   async create(createAdminerDto: CreateAdminerDto) {
+    if (!createAdminerDto.password) {
+      throw new ForbiddenException('密码不能为空');
+    }
+    if (createAdminerDto.password != createAdminerDto.pwd) {
+      throw new ForbiddenException('两次密码不一致');
+    }
     const one = await this.adminerRepository.findOneBy({ phone: createAdminerDto.phone });
     if (one) throw new ForbiddenException('手机号已经存在');
     if (!createAdminerDto.companies.length) throw new ForbiddenException('公司不能为空');
-    const info = this.adminerRepository.create({ ...createAdminerDto, companies: [] });
-    // 关联公司
-    createAdminerDto.companies.forEach(async (item) => {
-      const com = await this.companyService.findOne(item as unknown as number);
-      info.companies.push(com);
-    });
-    // 关联角色
-    info.role = await this.roleService.findOne(createAdminerDto.roleId);
-    this.adminerRepository.save(info);
+    const adminer = this.adminerRepository.create();
+    const role = await this.roleService.findOne(createAdminerDto.role);
+    const companies = await this.companyService.findIn(...createAdminerDto.companies);
+    this.adminerRepository.merge(adminer, { ...createAdminerDto, companies, role });
+    await this.adminerRepository.save(adminer);
     return '创建成功';
-    // this.adminerRepository.save(info);
   }
 
   findAll() {
-    return this.adminerRepository.find();
+    return this.adminerRepository.find({ relations: ['role', 'companies'] });
   }
 
   findOne(id: number) {
@@ -51,8 +52,14 @@ export class AdminerService {
   }
 
   async update(id: number, updateAdminerDto: UpdateAdminerDto) {
+    if (updateAdminerDto.password && updateAdminerDto.password != updateAdminerDto.pwd) {
+      throw new ForbiddenException('两次密码不一致');
+    }
     const adminer = await this.adminerRepository.findOneBy({ id });
-    this.adminerRepository.merge(adminer, updateAdminerDto);
+    const role = await this.roleService.findOne(updateAdminerDto.role);
+    const companies = await this.companyService.findIn(...updateAdminerDto.companies);
+    this.adminerRepository.merge(adminer, { ...updateAdminerDto, companies, role });
+    await this.adminerRepository.save(adminer);
     return 'ok';
   }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -34,5 +34,9 @@ export class CompanyService {
 
   remove(id: number) {
     return `This action removes a #${id} company`;
+  }
+
+  findIn(...ids: number[]) {
+    return this.companyRepository.find({ where: { id: In(ids) } });
   }
 }

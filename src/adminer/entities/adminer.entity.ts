@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, BeforeInsert, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { hash } from 'argon2';
 import { Company } from '../../company/entities/company.entity';
 import { Role } from '../../role/entities/role.entity';
@@ -38,5 +38,12 @@ export class Adminer {
   @BeforeInsert()
   async beforeInsert() {
     this.password = await hash(this.password);
+  }
+
+  @BeforeUpdate()
+  async beforeUpdate() {
+    if (this.password) {
+      this.password = await hash(this.password);
+    }
   }
 }
