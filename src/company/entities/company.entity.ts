@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Adminer } from '../../adminer/entities/adminer.entity';
 import { QuType } from '../../app/enum/company.enum';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Company {
@@ -25,4 +26,8 @@ export class Company {
   @ManyToMany(() => Adminer, (adminer) => adminer.companies)
   @JoinTable()
   adminers: Adminer[];
+
+  @ManyToMany(() => User, (user) => user.companies)
+  @JoinTable()
+  users: User[];
 }

@@ -13,6 +13,9 @@ import { MenuModule } from './menu/menu.module';
 import { AuthGuard } from './app/guard/auth.guard';
 import { RoleGuard } from './app/guard/role.guard';
 import { FormatInterceptor } from './app/interceptor/format.interceptor';
+import { UserModule } from './user/user.module';
+import { ContractModule } from './contract/contract.module';
+import { RoomModule } from './room/room.module';
 
 @Module({
   imports: [
@@ -53,6 +56,9 @@ import { FormatInterceptor } from './app/interceptor/format.interceptor';
     CompanyModule,
     RoleModule,
     MenuModule,
+    UserModule,
+    ContractModule,
+    RoomModule,
   ],
   controllers: [],
   providers: [

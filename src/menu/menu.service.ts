@@ -5,12 +5,11 @@ import { Repository } from 'typeorm';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { Menu } from './entities/menu.entity';
-import { AdminerService } from '../adminer/adminer.service';
 import { menuTrees } from '../app/utils';
 
 @Injectable()
 export class MenuService {
-  constructor(@InjectRepository(Menu) private menuRepository: Repository<Menu>, private adminerService: AdminerService) {}
+  constructor(@InjectRepository(Menu) private menuRepository: Repository<Menu>) {}
   async create(info: CreateMenuDto) {
     let parent: Menu | null = null;
     if (typeof info.parent === 'number') {
