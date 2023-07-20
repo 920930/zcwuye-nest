@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
+import { CompanyService } from '../company/company.service';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
-import { CompanyService } from '../company/company.service';
+import { SearchUserDto } from './dto/search-user.dto';
 
 @Injectable()
 export class UserService {
@@ -17,14 +19,17 @@ export class UserService {
     return 'This action adds a new user';
   }
 
-  async findAll(page: number, size: number) {
-    console.log(page, size);
+  async findAll(info: SearchUserDto) {
+    const arr = [];
+    info.name && arr.push({ name: info.name });
+    info.phone && arr.push({ phone: info.phone });
     const data = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.companies', 'companies')
       .orderBy('user.id', 'DESC')
-      .skip(page - 1)
-      .take(size)
+      .where(arr)
+      .skip((+info.page - 1) * +info.size) // 偏移量，跳过的实体数量
+      .take(+info.size) // 分页限制 获取的实体数量
       .getManyAndCount();
     // const data = await this.userRepository.findAndCount({ relations: ['companies'] });
     return data;
@@ -35,7 +40,6 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
     const companies = await this.companyService.findIn(...updateUserDto.companies);
     const user = await this.userRepository.findOneBy({ id });
     this.userRepository.merge(user, { ...updateUserDto, companies });
@@ -45,5 +49,11 @@ export class UserService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async findPhoneCard(phone: string, card: string) {
+    return await this.userRepository.find({
+      where: [{ phone }, { card }],
+    });
   }
 }
