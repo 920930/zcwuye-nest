@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export class CreateCompanyDto {
   @IsNumber()
@@ -7,14 +7,17 @@ export class CreateCompanyDto {
   @IsString()
   name: string;
 
-  @IsString()
-  dong: string;
+  @IsNumber()
+  dong: number;
 
   @IsString()
   qu: string;
 
+  @IsArray()
+  qutype: number[];
+
   @IsNumber()
-  qutype: number;
+  qulen: number;
 
   @IsBoolean()
   state: boolean;

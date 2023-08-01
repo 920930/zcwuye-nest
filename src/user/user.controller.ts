@@ -17,7 +17,6 @@ export class UserController {
 
   @Get()
   findAll(@Query() info: SearchUserDto) {
-    console.log(info);
     return this.userService.findAll(info);
   }
 

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, AfterLoad } from 'typeorm';
+import { Company } from '../../company/entities/company.entity';
 
 @Entity()
 export class Room {
@@ -20,4 +21,12 @@ export class Room {
 
   @Column({ type: 'float', precision: 5, scale: 2 })
   area: number;
+
+  @ManyToOne(() => Company, (company) => company.rooms)
+  company: Company;
+
+  @AfterLoad()
+  afterLoad() {
+    this.price = Number.parseFloat(`${this.price}`);
+  }
 }

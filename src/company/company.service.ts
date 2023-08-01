@@ -11,7 +11,7 @@ export class CompanyService {
   constructor(@InjectRepository(Company) private companyRepository: Repository<Company>) {}
   async create(createCompanyDto: CreateCompanyDto) {
     Reflect.deleteProperty(createCompanyDto, 'id');
-    const company = this.companyRepository.create(createCompanyDto);
+    const company = this.companyRepository.create({ ...createCompanyDto, qutype: createCompanyDto.qutype.sort((a, b) => a - b).join('') });
     await this.companyRepository.save(company);
     return 'This action adds a new company';
   }
@@ -26,7 +26,7 @@ export class CompanyService {
 
   async update(id: number, updateCompanyDto: UpdateCompanyDto) {
     const company = await this.companyRepository.findOneBy({ id });
-    this.companyRepository.merge(company, updateCompanyDto);
+    this.companyRepository.merge(company, { ...updateCompanyDto, qutype: updateCompanyDto.qutype.sort((a, b) => a - b).join('-') });
     await this.companyRepository.save(company);
     // this.companyRepository.update(id, updateCompanyDto);
     return `This action updates a #${id} company`;

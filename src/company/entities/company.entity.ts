@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, AfterLoad } from 'typeorm';
 import { Adminer } from '../../adminer/entities/adminer.entity';
-import { QuType } from '../../app/enum/company.enum';
+// import { QuType } from '../../app/enum/company.enum';
 import { User } from '../../user/entities/user.entity';
+import { Room } from 'src/room/entities/room.entity';
 
 @Entity()
 export class Company {
@@ -12,13 +13,19 @@ export class Company {
   name: string;
 
   @Column({ comment: '栋' })
-  dong: string;
+  dong: number;
 
   @Column({ comment: '区' })
   qu: string;
 
-  @Column({ type: 'enum', enum: QuType, default: QuType.NUM, comment: '区类型' })
-  qutype: QuType;
+  // @Column({ type: 'enum', enum: QuType, default: QuType.NUM, comment: '区类型 1数字区 2字母区 3数字字母区 4楼区' })
+  // qutype: QuType;
+
+  @Column({ default: '', comment: '区类型 1数字区 2字母区 3数字字母区 4楼区 5特区' })
+  qutype: string;
+
+  @Column({ type: 'tinyint', default: 0, comment: '区增量长度,(例 楼 2 即最多只有2楼) (例 字母数字3 则最多 A3 B3)' })
+  qulen: number;
 
   @Column({ default: true })
   state: boolean;
@@ -30,4 +37,13 @@ export class Company {
   @ManyToMany(() => User, (user) => user.companies)
   @JoinTable()
   users: User[];
+
+  @OneToMany(() => Room, (room) => room.company)
+  rooms: Room[];
+
+  @AfterLoad()
+  afterLoad() {
+    const data = this.qutype.length > 1 ? this.qutype.split('-') : [this.qutype];
+    this.qutype = data.map((item) => Number(item)) as unknown as string;
+  }
 }
