@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, AfterLoad } from 'typeorm';
 import { Company } from '../../company/entities/company.entity';
+import { Contract } from '../../contract/entities/contract.entity';
 
 @Entity()
 export class Room {
@@ -24,6 +25,9 @@ export class Room {
 
   @ManyToOne(() => Company, (company) => company.rooms)
   company: Company;
+
+  @ManyToOne(() => Contract, (contract) => contract.rooms)
+  contract: Contract;
 
   @AfterLoad()
   afterLoad() {

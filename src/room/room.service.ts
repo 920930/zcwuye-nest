@@ -40,7 +40,8 @@ export class RoomService {
   }
 
   async remove(id: number) {
-    // const one = await this.roomRepository.find({ where: { id }, relations: [''] });
+    const one = await this.roomRepository.findOne({ where: { id }, relations: ['contract'] });
+    if (one.contract) throw new ForbiddenException('请先删除合同');
     await this.roomRepository.delete({ id });
     return `This action removes a #${id} room`;
   }
