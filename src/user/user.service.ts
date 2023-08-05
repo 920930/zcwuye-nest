@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CompanyService } from '../company/company.service';
 
@@ -55,5 +55,10 @@ export class UserService {
     return await this.userRepository.find({
       where: [{ phone }, { card }],
     });
+  }
+
+  async searchAll(val: string) {
+    const key = /^1[3-9]/.test(val) ? 'phone' : 'name';
+    return await this.userRepository.find({ where: { [key]: Like(`%${val}%`) } });
   }
 }

@@ -20,6 +20,11 @@ export class UserController {
     return this.userService.findAll(info);
   }
 
+  @Get('search')
+  searchAll(@Query('val') val: string) {
+    return this.userService.searchAll(val);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);

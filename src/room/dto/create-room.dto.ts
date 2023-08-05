@@ -1,11 +1,12 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateRoomDto {
   @IsNumber()
   id: number;
 
+  @IsOptional()
   @IsNumber()
-  dong: number;
+  dong?: number = 0;
 
   @IsNotEmpty()
   qu: string;

@@ -10,8 +10,8 @@ export class CreateCompanyDto {
   @IsNumber()
   dong: number;
 
-  @IsString()
-  qu: string;
+  @IsNumber()
+  qu: number;
 
   @IsArray()
   qutype: number[];

@@ -16,7 +16,7 @@ export class Company {
   dong: number;
 
   @Column({ comment: '区' })
-  qu: string;
+  qu: number;
 
   // @Column({ type: 'enum', enum: QuType, default: QuType.NUM, comment: '区类型 1数字区 2字母区 3数字字母区 4楼区' })
   // qutype: QuType;
