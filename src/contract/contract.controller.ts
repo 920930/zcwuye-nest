@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, UploadedFile } from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 
 import { ContractService } from './contract.service';
@@ -11,8 +11,10 @@ export class ContractController {
   constructor(private readonly contractService: ContractService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('files'))
-  create(@Body() createContractDto: any, @UploadedFiles() files: Express.Multer.File[]) {
+  @UseInterceptors(FilesInterceptor('files'))
+  // @UseInterceptors(FileInterceptor('files'))
+  create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() createContractDto: any) {
+    // create(@UploadedFile() files: Express.Multer.File, @Body() createContractDto: any) {
     console.log(createContractDto);
     console.log(files);
     return this.contractService.create(createContractDto);
