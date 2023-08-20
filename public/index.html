@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="file" id="file" multiple>
+  <script>
+    const oInput = document.getElementById('file')
+    oInput.addEventListener('change', () => {
+      const form = new FormData()
+      form.set('name', 'haha')
+      form.append('files', oInput.files[0])
+      form.append('files', oInput.files[1])
+      fetch('http://localhost:3000/api/contract', {
+        method: 'POST',
+        body: form
+      }).then(ret => ret.json())
+      .then(ret => console.log(ret))
+      .catch(err => console.log(err))
+      console.log(oInput.files)
+    })
+  </script>
+</body>
+</html>
