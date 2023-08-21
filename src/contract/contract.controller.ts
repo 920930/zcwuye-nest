@@ -1,36 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, UploadedFile } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import * as dayjs from 'dayjs';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 import { ContractService } from './contract.service';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
 import { Public } from '../app/decorator/public.decorator';
-import { diskStorage } from 'multer';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('contract')
 export class ContractController {
-  constructor(private readonly contractService: ContractService) {}
+  constructor(private readonly contractService: ContractService, private configService: ConfigService) {}
 
   @Post()
   @Public()
-  @UseInterceptors(
-    FilesInterceptor('files', undefined, {
-      // storage: diskStorage({
-      //   destination: './uploads/2023',
-      //   filename(req, file, cb) {
-      //     console.log(123);
-      //     const filename = `${dayjs().valueOf()}-${Math.random().toString(16).slice(2)}.${file.mimetype.split('/')[1]}`;
-      //     return cb(null, filename);
-      //   },
-      // }),
-    }),
-  )
-  create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() createContractDto: any) {
+  @UseInterceptors(FilesInterceptor('files'))
+  create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() createContractDto: CreateContractDto) {
     // @UseInterceptors(FileInterceptor('files'))
     // create(@UploadedFile() files: Express.Multer.File, @Body() createContractDto: any) {
     // console.log(createContractDto);
-    console.log(files);
+    files.forEach((file) => {
+      const arr = file.path.split(this.configService.get<string>('MULTER_DEST'));
+      const u = this.configService.get<string>('MULTER_DEST') + arr[1].replaceAll(/(\\)|(\/\/)/g, '/');
+      createContractDto.yyzz += `${u},`;
+    });
     return this.contractService.create(createContractDto);
   }
 

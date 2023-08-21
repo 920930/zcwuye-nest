@@ -4,7 +4,8 @@ import { UpdateContractDto } from './dto/update-contract.dto';
 
 @Injectable()
 export class ContractService {
-  create(createContractDto: any) {
+  create(createContractDto: CreateContractDto) {
+    console.log(createContractDto);
     return 'This action adds a new contract';
   }
 

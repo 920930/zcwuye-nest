@@ -1,5 +1,5 @@
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsPhoneNumber, Validate } from 'class-validator';
-import { PhoneOrCardDto } from './phoneOrCard.dto';
+import { PhoneOrCardDto } from '../../app/dto/phoneOrCard';
 
 export class CreateUserDto {
   @IsNumber()
