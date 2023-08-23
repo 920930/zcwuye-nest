@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional, IsPhoneNumber, IsString, Validate } from 'class-validator';
-import { PhoneOrCardDto } from './phoneOrCard.dto';
+import { PhoneOrCardDto } from '../../app/dto/phoneOrCard';
 export class SearchUserDto {
   @IsString()
   @IsOptional()
