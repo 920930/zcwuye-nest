@@ -72,7 +72,7 @@ export class AdminerService {
       .createQueryBuilder('adminer')
       .where('adminer.phone=:phone', { phone })
       .andWhere('adminer.state=true')
-      .addSelect('adminer.password')
+      .addSelect('adminer.password') // password不可见，通过这个方法让其可查询
       .getOne();
   }
 }

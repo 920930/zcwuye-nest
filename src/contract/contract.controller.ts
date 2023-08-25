@@ -14,15 +14,19 @@ export class ContractController {
   @Post()
   @Public()
   @UseInterceptors(FilesInterceptor('files'))
-  create(@UploadedFiles() files: Array<Express.Multer.File>, @Body() createContractDto: CreateContractDto) {
+  create(@Body() createContractDto: CreateContractDto, @UploadedFiles() files: Array<Express.Multer.File>) {
     // @UseInterceptors(FileInterceptor('files'))
     // create(@UploadedFile() files: Express.Multer.File, @Body() createContractDto: any) {
     // console.log(createContractDto);
-    files.forEach((file) => {
-      const arr = file.path.split(this.configService.get<string>('MULTER_DEST'));
-      const u = this.configService.get<string>('MULTER_DEST') + arr[1].replaceAll(/(\\)|(\/\/)/g, '/');
-      createContractDto.yyzz += `${u},`;
-    });
+    if (files.length) {
+      const ret: string[] = [];
+      files.forEach((file) => {
+        const arr = file.path.split(this.configService.get<string>('MULTER_DEST'));
+        const u = this.configService.get<string>('MULTER_DEST') + arr[1].replaceAll(/(\\)|(\/\/)/g, '/');
+        ret.push(u);
+      });
+      createContractDto.yyzz = ret.join(',');
+    }
     return this.contractService.create(createContractDto);
   }
 

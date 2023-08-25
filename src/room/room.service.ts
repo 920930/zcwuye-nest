@@ -3,7 +3,7 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './entities/room.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CompanyService } from '../company/company.service';
 
 @Injectable()
@@ -23,6 +23,8 @@ export class RoomService {
     return this.roomRepository
       .createQueryBuilder('room')
       .innerJoinAndSelect('room.company', 'company', 'company.id=:id', { id: companyId })
+      .leftJoinAndSelect('room.contract', 'contract')
+      .select(['room', 'company.id', 'contract.id'])
       .orderBy('room.qu', 'ASC')
       .orderBy('room.num', 'ASC')
       .getMany();
@@ -30,6 +32,10 @@ export class RoomService {
 
   findOne(id: number) {
     return `This action returns a #${id} room`;
+  }
+
+  findIn(id: (string | number)[]) {
+    return this.roomRepository.find({ where: { id: In(id) } });
   }
 
   async update(id: number, updateRoomDto: UpdateRoomDto) {

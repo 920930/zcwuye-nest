@@ -1,13 +1,22 @@
 import { Module } from '@nestjs/common';
-import { ContractService } from './contract.service';
-import { ContractController } from './contract.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as dayjs from 'dayjs';
 import { join } from 'path';
 
+import { Contract } from './entities/contract.entity';
+import { ContractService } from './contract.service';
+import { ContractController } from './contract.controller';
+
+import { UserModule } from '../user/user.module';
+import { RoomModule } from '../room/room.module';
+
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Contract]),
+    UserModule,
+    RoomModule,
     MulterModule.register({
       storage: diskStorage({
         destination: `${join(__dirname, '../../', 'uploads')}/${dayjs().year()}`,

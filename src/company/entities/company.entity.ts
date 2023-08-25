@@ -12,6 +12,9 @@ export class Company {
   @Column()
   name: string;
 
+  @Column()
+  fname: string;
+
   @Column({ comment: '栋' })
   dong: number;
 
@@ -43,7 +46,9 @@ export class Company {
 
   @AfterLoad()
   afterLoad() {
-    const data = this.qutype.length > 1 ? this.qutype.split('-') : [this.qutype];
-    this.qutype = data.map((item) => Number(item)) as unknown as string;
+    if (this.qutype) {
+      const data = this.qutype.length > 1 ? this.qutype.split('-') : [this.qutype];
+      this.qutype = data.map((item) => Number(item)) as unknown as string;
+    }
   }
 }

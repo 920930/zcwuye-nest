@@ -1,5 +1,4 @@
-import { IsString, IsNotEmpty, Length, IsPhoneNumber, Validate } from 'class-validator';
-import { PhoneOrCardDto } from '../../app/dto/phoneOrCard';
+import { IsString, IsNotEmpty, Length } from 'class-validator';
 
 export class CreateContractDto {
   @IsNotEmpty()
@@ -8,10 +7,6 @@ export class CreateContractDto {
   @IsString()
   @Length(1, 6)
   name: string;
-
-  @IsPhoneNumber()
-  @Validate(PhoneOrCardDto)
-  phone: string;
 
   @IsNotEmpty()
   userId: number;

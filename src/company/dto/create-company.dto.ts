@@ -7,6 +7,9 @@ export class CreateCompanyDto {
   @IsString()
   name: string;
 
+  @IsString()
+  fname: string;
+
   @IsNumber()
   dong: number;
 
