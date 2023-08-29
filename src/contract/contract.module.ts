@@ -11,12 +11,14 @@ import { ContractController } from './contract.controller';
 
 import { UserModule } from '../user/user.module';
 import { RoomModule } from '../room/room.module';
+import { CompanyModule } from '../company/company.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Contract]),
     UserModule,
     RoomModule,
+    CompanyModule,
     MulterModule.register({
       storage: diskStorage({
         destination: `${join(__dirname, '../../', 'uploads')}/${dayjs().year()}`,

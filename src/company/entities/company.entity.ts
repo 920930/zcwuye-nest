@@ -2,7 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMan
 import { Adminer } from '../../adminer/entities/adminer.entity';
 // import { QuType } from '../../app/enum/company.enum';
 import { User } from '../../user/entities/user.entity';
-import { Room } from 'src/room/entities/room.entity';
+import { Room } from '../../room/entities/room.entity';
+import { Contract } from '../../contract/entities/contract.entity';
 
 @Entity()
 export class Company {
@@ -14,6 +15,9 @@ export class Company {
 
   @Column()
   fname: string;
+
+  @Column({ comment: '合同抬头编号' })
+  bm: string;
 
   @Column({ comment: '栋' })
   dong: number;
@@ -43,6 +47,9 @@ export class Company {
 
   @OneToMany(() => Room, (room) => room.company)
   rooms: Room[];
+
+  @OneToMany(() => Contract, (contract) => contract.company)
+  contract: Contract[];
 
   @AfterLoad()
   afterLoad() {

@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, Query } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { ConfigService } from '@nestjs/config';
 
 import { ContractService } from './contract.service';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
 import { Public } from '../app/decorator/public.decorator';
-import { ConfigService } from '@nestjs/config';
+import { SearchContractDto } from './dto/search-contract.dto';
 
 @Controller('contract')
 export class ContractController {
@@ -17,7 +18,6 @@ export class ContractController {
   create(@Body() createContractDto: CreateContractDto, @UploadedFiles() files: Array<Express.Multer.File>) {
     // @UseInterceptors(FileInterceptor('files'))
     // create(@UploadedFile() files: Express.Multer.File, @Body() createContractDto: any) {
-    // console.log(createContractDto);
     if (files.length) {
       const ret: string[] = [];
       files.forEach((file) => {
@@ -31,8 +31,8 @@ export class ContractController {
   }
 
   @Get()
-  findAll() {
-    return this.contractService.findAll();
+  findAll(@Query() searchInfo: SearchContractDto) {
+    return this.contractService.findAll(searchInfo);
   }
 
   @Get(':id')

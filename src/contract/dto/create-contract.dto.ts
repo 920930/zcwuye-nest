@@ -8,8 +8,14 @@ export class CreateContractDto {
   @Length(1, 6)
   name: string;
 
+  @IsString()
+  bianma: string;
+
   @IsNotEmpty()
   userId: number;
+
+  @IsNotEmpty()
+  companyId: number;
 
   @IsString()
   rooms: string;
