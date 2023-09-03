@@ -12,10 +12,12 @@ import { ContractController } from './contract.controller';
 import { UserModule } from '../user/user.module';
 import { RoomModule } from '../room/room.module';
 import { CompanyModule } from '../company/company.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Contract]),
+    ConfigModule,
     UserModule,
     RoomModule,
     CompanyModule,

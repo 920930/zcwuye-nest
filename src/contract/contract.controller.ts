@@ -36,8 +36,12 @@ export class ContractController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.contractService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const data = await this.contractService.findOne(+id);
+    const rooms = data.rooms.map((item) => `${item.id}`);
+    data.rooms = rooms as any;
+    data.yyzz = data.yyzz.split(',') as any;
+    return data;
   }
 
   @Patch(':id')

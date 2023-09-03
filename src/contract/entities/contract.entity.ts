@@ -2,9 +2,11 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, AfterLoad
 import { User } from '../../user/entities/user.entity';
 import { Room } from '../../room/entities/room.entity';
 import { Company } from '../../company/entities/company.entity';
+import { ConfigService } from '@nestjs/config';
 // 合同
 @Entity()
 export class Contract {
+  constructor(private configService: ConfigService) {}
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -39,7 +41,13 @@ export class Contract {
 
   @AfterLoad()
   afterLoad() {
-    // this.yyzz = this.yyzz.split(',') as unknown as string;
+    if (this.yyzz) {
+      // const val = this.yyzz
+      //   .split(',')
+      //   .map((item) => `${this.configService.get<string>('HOST_SERVICE')}/${item}`)
+      //   .join(',');
+      console.log(this.configService);
+    }
   }
 
   @BeforeInsert()

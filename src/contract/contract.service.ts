@@ -57,7 +57,7 @@ export class ContractService {
   }
 
   findOne(id: number) {
-    return this.contractRepository.findOneBy({ id });
+    return this.contractRepository.findOne({ where: { id }, relations: ['rooms', 'user'] });
   }
 
   async update(id: number, updateContractDto: UpdateContractDto) {
