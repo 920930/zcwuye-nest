@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config';
 import { ContractService } from './contract.service';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
-import { Public } from '../app/decorator/public.decorator';
 import { SearchContractDto } from './dto/search-contract.dto';
 
 @Controller('contract')
@@ -13,7 +12,6 @@ export class ContractController {
   constructor(private readonly contractService: ContractService, private configService: ConfigService) {}
 
   @Post()
-  @Public()
   @UseInterceptors(FilesInterceptor('files'))
   create(@Body() createContractDto: CreateContractDto, @UploadedFiles() files: Array<Express.Multer.File>) {
     // @UseInterceptors(FileInterceptor('files'))
@@ -38,14 +36,26 @@ export class ContractController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const data = await this.contractService.findOne(+id);
-    const rooms = data.rooms.map((item) => `${item.id}`);
-    data.rooms = rooms as any;
-    data.yyzz = data.yyzz.split(',') as any;
-    return data;
+    return {
+      ...data,
+      rooms: data.rooms.map((item) => `${item.id}`),
+      yyzz: data.yyzz.split(','),
+    };
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateContractDto: UpdateContractDto) {
+  @UseInterceptors(FilesInterceptor('files'))
+  update(@Param('id') id: string, @Body() updateContractDto: UpdateContractDto, @UploadedFiles() files: Array<Express.Multer.File>) {
+    if (files.length) {
+      const ret: string[] = [];
+      files.forEach((file) => {
+        const arr = file.path.split(this.configService.get<string>('MULTER_DEST'));
+        const u = this.configService.get<string>('MULTER_DEST') + arr[1].replaceAll(/(\\)|(\/\/)/g, '/');
+        ret.push(u);
+      });
+      ret.push(...updateContractDto.yyzz?.split(','));
+      updateContractDto.yyzz = ret.join(',');
+    }
     return this.contractService.update(+id, updateContractDto);
   }
 

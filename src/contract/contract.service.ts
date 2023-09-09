@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
+
 import { Contract } from './entities/contract.entity';
 
 import { RoomService } from '../room/room.service';
@@ -18,6 +20,7 @@ export class ContractService {
     private roomService: RoomService,
     private userService: UserService,
     private companyService: CompanyService,
+    private configService: ConfigService,
   ) {}
   async create(createContractDto: CreateContractDto) {
     const rooms = await this.roomService.findIn(createContractDto.rooms.split(','));
@@ -61,9 +64,16 @@ export class ContractService {
   }
 
   async update(id: number, updateContractDto: UpdateContractDto) {
+    Reflect.deleteProperty(updateContractDto, 'id');
+    if (updateContractDto.yyzz.length) {
+      const host = this.configService.get('HOST_SERVICE');
+      const yyzz = updateContractDto.yyzz?.split(',');
+      updateContractDto.yyzz = yyzz.map((item) => (item.includes(host) ? item.slice(host.length + 1) : item)).join(',');
+    }
     const contract = await this.contractRepository.findOneBy({ id });
     const rooms = await this.roomService.findIn(updateContractDto.rooms.split(','));
     this.contractRepository.merge(contract, { ...updateContractDto, rooms });
+    this.contractRepository.save(contract);
     return `This action updates a #${id} contract`;
   }
 

@@ -2,11 +2,12 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, AfterLoad
 import { User } from '../../user/entities/user.entity';
 import { Room } from '../../room/entities/room.entity';
 import { Company } from '../../company/entities/company.entity';
-import { ConfigService } from '@nestjs/config';
+import * as fs from 'fs';
+import * as path from 'path';
+
 // 合同
 @Entity()
 export class Contract {
-  constructor(private configService: ConfigService) {}
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -40,13 +41,15 @@ export class Contract {
   company: Company;
 
   @AfterLoad()
-  afterLoad() {
+  async afterLoad() {
     if (this.yyzz) {
-      // const val = this.yyzz
-      //   .split(',')
-      //   .map((item) => `${this.configService.get<string>('HOST_SERVICE')}/${item}`)
-      //   .join(',');
-      console.log(this.configService);
+      const file = fs.readFileSync(path.resolve(`.env.${process.env.NODE_ENV}`)).toLocaleString();
+      const arr = file.split('\r\n').find((item) => item.startsWith('HOST_SERVICE'));
+      const host = arr.split('=')[1];
+      this.yyzz = this.yyzz
+        .split(',')
+        .map((item) => `${host}/${item}`)
+        .join(',');
     }
   }
 
@@ -61,6 +64,10 @@ export class Contract {
   beforeUpdate() {
     if (this.rooms.length) {
       this.oldRooms = oldRoomsFn(this.rooms);
+    }
+    if (this.yyzz) {
+      const yyzz = this.yyzz.split(',');
+      console.log(yyzz);
     }
   }
 }
