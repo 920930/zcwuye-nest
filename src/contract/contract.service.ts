@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import * as path from 'path';
+import * as fs from 'fs';
 
 import { Contract } from './entities/contract.entity';
 
@@ -78,6 +80,20 @@ export class ContractService {
   }
 
   remove(id: number) {
+    return `This action removes a #${id} contract`;
+  }
+
+  async removeImg(id: number, img: string) {
+    const host = (this.configService.get('HOST_SERVICE') as string).length;
+    const contract = await this.contractRepository.findOneBy({ id });
+    const yyzz = contract.yyzz.split(',');
+    img = img.slice(host + 1);
+    const index = yyzz.findIndex((item) => item.includes(img));
+    yyzz.splice(index, 1);
+    contract.yyzz = yyzz.map((item) => item.slice(host + 1)).join(',');
+    this.contractRepository.save(contract);
+    const localPth = path.resolve(__dirname, '../../' + img);
+    fs.unlinkSync(localPth);
     return `This action removes a #${id} contract`;
   }
 }

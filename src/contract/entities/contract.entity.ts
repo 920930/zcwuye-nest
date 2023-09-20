@@ -62,7 +62,7 @@ export class Contract {
 
   @BeforeUpdate()
   beforeUpdate() {
-    if (this.rooms.length) {
+    if (this.rooms && this.rooms.length) {
       this.oldRooms = oldRoomsFn(this.rooms);
     }
     if (this.yyzz) {

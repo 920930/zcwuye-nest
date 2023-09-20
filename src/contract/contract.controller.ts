@@ -59,6 +59,12 @@ export class ContractController {
     return this.contractService.update(+id, updateContractDto);
   }
 
+  @Delete('img')
+  removeImg(@Query() info: { id: string; img: string }) {
+    return this.contractService.removeImg(+info.id, info.img);
+    console.log(info);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.contractService.remove(+id);
