@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import * as path from 'path';
-import * as fs from 'fs';
+import { resolve } from 'node:path';
+import { access, constants, unlinkSync } from 'node:fs';
 
 import { Contract } from './entities/contract.entity';
 
@@ -71,6 +71,8 @@ export class ContractService {
       const host = this.configService.get('HOST_SERVICE');
       const yyzz = updateContractDto.yyzz?.split(',');
       updateContractDto.yyzz = yyzz.map((item) => (item.includes(host) ? item.slice(host.length + 1) : item)).join(',');
+    } else {
+      updateContractDto.yyzz = null;
     }
     const contract = await this.contractRepository.findOneBy({ id });
     const rooms = await this.roomService.findIn(updateContractDto.rooms.split(','));
@@ -84,16 +86,22 @@ export class ContractService {
   }
 
   async removeImg(id: number, img: string) {
-    const host = (this.configService.get('HOST_SERVICE') as string).length;
+    const len = this.configService.get<string>('HOST_SERVICE').length + 1;
     const contract = await this.contractRepository.findOneBy({ id });
-    const yyzz = contract.yyzz.split(',');
-    img = img.slice(host + 1);
-    const index = yyzz.findIndex((item) => item.includes(img));
-    yyzz.splice(index, 1);
-    contract.yyzz = yyzz.map((item) => item.slice(host + 1)).join(',');
-    this.contractRepository.save(contract);
-    const localPth = path.resolve(__dirname, '../../' + img);
-    fs.unlinkSync(localPth);
+    if (!contract.yyzz) return;
+    const yyzzArr = contract.yyzz.split(',');
+    img = img.slice(len);
+    const index = yyzzArr.findIndex((item) => item.includes(img));
+    if (index !== -1) yyzzArr.splice(index, 1);
+    // 删除数据库的图片
+    const yyzz = yyzzArr.map((item) => item.slice(len)).join(',');
+    contract.yyzz = yyzz.length ? yyzz : null;
+    await this.contractRepository.save(contract);
+    // 删除本地物理路径图片
+    const localPth = resolve(__dirname, '../../' + img);
+    access(localPth, constants.F_OK, (err) => {
+      if (!err) unlinkSync(localPth);
+    });
     return `This action removes a #${id} contract`;
   }
 }

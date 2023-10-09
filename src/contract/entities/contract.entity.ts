@@ -19,8 +19,9 @@ export class Contract {
 
   @Column({
     length: 500,
+    default: null,
   })
-  yyzz?: string;
+  yyzz?: string | null;
 
   @Column()
   oldRooms?: string;
@@ -64,10 +65,6 @@ export class Contract {
   beforeUpdate() {
     if (this.rooms && this.rooms.length) {
       this.oldRooms = oldRoomsFn(this.rooms);
-    }
-    if (this.yyzz) {
-      const yyzz = this.yyzz.split(',');
-      console.log(yyzz);
     }
   }
 }

@@ -11,11 +11,12 @@ import { SearchContractDto } from './dto/search-contract.dto';
 export class ContractController {
   constructor(private readonly contractService: ContractService, private configService: ConfigService) {}
 
+  // contract.module配置 UploadedFiles 上传
   @Post()
   @UseInterceptors(FilesInterceptor('files'))
   create(@Body() createContractDto: CreateContractDto, @UploadedFiles() files: Array<Express.Multer.File>) {
     // @UseInterceptors(FileInterceptor('files'))
-    // create(@UploadedFile() files: Express.Multer.File, @Body() createContractDto: any) {
+    // create(@UploadedFile() files: Express.Multer.File, @Body() createContractDto: any) {}
     if (files.length) {
       const ret: string[] = [];
       files.forEach((file) => {
@@ -39,10 +40,11 @@ export class ContractController {
     return {
       ...data,
       rooms: data.rooms.map((item) => `${item.id}`),
-      yyzz: data.yyzz.split(','),
+      yyzz: data.yyzz?.length ? data.yyzz.split(',') : [],
     };
   }
 
+  // contract.module配置 UploadedFiles 上传
   @Patch(':id')
   @UseInterceptors(FilesInterceptor('files'))
   update(@Param('id') id: string, @Body() updateContractDto: UpdateContractDto, @UploadedFiles() files: Array<Express.Multer.File>) {
@@ -53,7 +55,7 @@ export class ContractController {
         const u = this.configService.get<string>('MULTER_DEST') + arr[1].replaceAll(/(\\)|(\/\/)/g, '/');
         ret.push(u);
       });
-      ret.push(...updateContractDto.yyzz?.split(','));
+      updateContractDto.yyzz?.length && ret.push(...updateContractDto.yyzz.split(','));
       updateContractDto.yyzz = ret.join(',');
     }
     return this.contractService.update(+id, updateContractDto);
@@ -62,7 +64,6 @@ export class ContractController {
   @Delete('img')
   removeImg(@Query() info: { id: string; img: string }) {
     return this.contractService.removeImg(+info.id, info.img);
-    console.log(info);
   }
 
   @Delete(':id')

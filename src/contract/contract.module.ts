@@ -12,7 +12,7 @@ import { ContractController } from './contract.controller';
 import { UserModule } from '../user/user.module';
 import { RoomModule } from '../room/room.module';
 import { CompanyModule } from '../company/company.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -21,15 +21,36 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     RoomModule,
     CompanyModule,
-    MulterModule.register({
-      storage: diskStorage({
-        destination: `${join(__dirname, '../../', 'uploads')}/${dayjs().year()}`,
-        filename(req, file, cb) {
-          const filename = `${dayjs().format('MMDDHHmmss')}-${Math.random().toString(16).slice(2)}.${file.mimetype.split('/')[1]}`;
-          return cb(null, filename);
-        },
+    MulterModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        storage: diskStorage({
+          destination: `${join(__dirname, '../../', `${configService.get<string>('MULTER_DEST')}/${dayjs().year()}`)}`,
+          filename(req, file, cb) {
+            const filename = `${dayjs().format('MMDDHHmmss')}-${Math.random().toString(16).slice(2)}.${file.mimetype.split('/')[1]}`;
+            return cb(null, filename);
+          },
+        }),
+        dest: `${dayjs().year()}`,
+        // fileFilter(req, file, callback) {
+        //   // 对上传文件的验证，比如对文件类型只能是图片类型的验证
+        //   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        //     return callback(new Error('Only image files are allowed!'), false);
+        //   }
+        //   callback(null, true);
+        // },
       }),
     }),
+    // MulterModule.register({
+    //   storage: diskStorage({
+    //     destination: `${join(__dirname, '../../', 'uploads')}/${dayjs().year()}`,
+    //     filename(req, file, cb) {
+    //       const filename = `${dayjs().format('MMDDHHmmss')}-${Math.random().toString(16).slice(2)}.${file.mimetype.split('/')[1]}`;
+    //       return cb(null, filename);
+    //     },
+    //   }),
+    // }),
   ],
   controllers: [ContractController],
   providers: [ContractService],
