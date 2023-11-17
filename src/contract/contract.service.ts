@@ -93,11 +93,11 @@ export class ContractService {
     img = img.slice(len);
     const index = yyzzArr.findIndex((item) => item.includes(img));
     if (index !== -1) yyzzArr.splice(index, 1);
-    // 删除数据库的图片
+    // 删除数据库的图片,图片在contract.entity中已经后置加载后自动添加域名链接
     const yyzz = yyzzArr.map((item) => item.slice(len)).join(',');
     contract.yyzz = yyzz.length ? yyzz : null;
     await this.contractRepository.save(contract);
-    // 删除本地物理路径图片
+    // // 删除本地物理路径图片
     const localPth = resolve(__dirname, '../../' + img);
     access(localPth, constants.F_OK, (err) => {
       if (!err) unlinkSync(localPth);

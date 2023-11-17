@@ -30,8 +30,8 @@ export class RoomService {
       .getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} room`;
+  findOne(id: number, contractId: number) {
+    return `This action returns a #${id} - ${contractId} room`;
   }
 
   findIn(id: (string | number)[]) {
