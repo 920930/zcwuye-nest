@@ -12,7 +12,7 @@ export class Permission {
   @Column({ comment: '权限中文标识' })
   title: string;
 
-  @ManyToMany(() => Role, (role) => role.permissions)
+  @ManyToMany(() => Role, (role) => role.permissions, { cascade: true, onDelete: 'CASCADE' })
   @JoinTable({ name: 'role_permisson' })
   roles: Role[];
 }

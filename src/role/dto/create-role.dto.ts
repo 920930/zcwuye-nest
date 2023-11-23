@@ -1,4 +1,4 @@
-import { IsNumber, IsString, IsEnum } from 'class-validator';
+import { IsNumber, IsString, IsEnum, IsOptional, IsArray } from 'class-validator';
 import { RoleType } from '../../app/enum/role.enum';
 
 export class CreateRoleDto {
@@ -10,4 +10,9 @@ export class CreateRoleDto {
 
   @IsString()
   title: string;
+
+  // IsOptional 有则验证，无则不验证
+  @IsOptional()
+  @IsArray()
+  permissions: number[];
 }
