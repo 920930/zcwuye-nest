@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany } from 'typeorm';
 import { RoleType } from '../../app/enum/role.enum';
 import { Adminer } from '../../adminer/entities/adminer.entity';
+import { Permission } from '../../permission/entities/permission.entity';
 
 @Entity()
 export class Role {
@@ -12,6 +13,9 @@ export class Role {
 
   @Column({ comment: '角色中文标识' })
   title: string;
+
+  @ManyToMany(() => Permission, (per) => per.roles)
+  permissions: Permission[];
 
   @OneToMany(() => Adminer, (adminer) => adminer.role)
   adminers: Adminer[];

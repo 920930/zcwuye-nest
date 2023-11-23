@@ -16,6 +16,7 @@ import { FormatInterceptor } from './app/interceptor/format.interceptor';
 import { UserModule } from './user/user.module';
 import { ContractModule } from './contract/contract.module';
 import { RoomModule } from './room/room.module';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { RoomModule } from './room/room.module';
     UserModule,
     ContractModule,
     RoomModule,
+    PermissionModule,
   ],
   controllers: [],
   providers: [
