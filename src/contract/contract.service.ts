@@ -41,7 +41,7 @@ export class ContractService {
         .leftJoinAndSelect('contract.user', 'user')
         .leftJoinAndSelect('contract.company', 'company')
         .where(info.companyId != '1' && 'contract.companyId = :id', { id: info.companyId })
-        .orderBy('contract.endTime', 'DESC')
+        .orderBy('contract.id', 'DESC')
         .select([
           'contract.id',
           'contract.bianma',

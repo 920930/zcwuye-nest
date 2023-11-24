@@ -26,11 +26,15 @@ export class MenuService {
 
   async findAll(companyId?: number) {
     const menus = await this.menuRepository.find({ relations: ['parent'] });
+    let data: Menu[] = [];
     if (companyId) {
       const menuFilter = menus.filter((menu) => new Set(menu.company).has(companyId));
-      return menuTrees(menuFilter);
+      data = menuTrees(menuFilter);
+    } else {
+      data = menuTrees(menus);
     }
-    return menuTrees(menus);
+    data.forEach((item) => item.children.sort((a, b) => b.meta.order - a.meta.order));
+    return data;
   }
 
   findOne(id: number) {
