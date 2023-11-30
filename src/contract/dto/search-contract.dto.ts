@@ -26,5 +26,5 @@ export class SearchContractDto {
 
   @Transform(({ value }) => +value)
   @IsNumber()
-  size = 10;
+  size = 20;
 }

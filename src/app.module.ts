@@ -17,6 +17,7 @@ import { UserModule } from './user/user.module';
 import { ContractModule } from './contract/contract.module';
 import { RoomModule } from './room/room.module';
 import { PermissionModule } from './permission/permission.module';
+import { CostModule } from './cost/cost.module';
 
 @Module({
   imports: [
@@ -36,8 +37,9 @@ import { PermissionModule } from './permission/permission.module';
           password: configService.get<string>('DB_PASSWORD'),
           database: configService.get<string>('DB_DATABASE'),
           entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
-          synchronize: true,
           autoLoadEntities: true,
+          timezone: 'Z',
+          synchronize: true,
         };
       },
     }),
@@ -61,6 +63,7 @@ import { PermissionModule } from './permission/permission.module';
     ContractModule,
     RoomModule,
     PermissionModule,
+    CostModule,
   ],
   controllers: [],
   providers: [

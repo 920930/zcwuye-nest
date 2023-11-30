@@ -1,9 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
+
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { User } from '../../user/entities/user.entity';
 import { Room } from '../../room/entities/room.entity';
 import { Company } from '../../company/entities/company.entity';
-import * as fs from 'fs';
-import * as path from 'path';
+import { Cost } from '../../cost/entities/cost.entity';
 
 // 合同
 @Entity()
@@ -34,6 +37,12 @@ export class Contract {
   @Column()
   endTime: string;
 
+  @Column({ type: 'decimal', precision: 6, scale: 2, comment: '总面积' })
+  area: number;
+
+  @Column({ type: 'decimal', precision: 6, scale: 2, comment: '月租金' })
+  price: number;
+
   @Column({
     comment: '合同状态',
     default: true,
@@ -42,6 +51,9 @@ export class Contract {
 
   @ManyToOne(() => User, (user) => user.contracts)
   user: User;
+
+  @OneToMany(() => Cost, (cost) => cost.contract, { cascade: true })
+  costs: Cost[];
 
   @OneToMany(() => Room, (room) => room.contract)
   rooms: Room[];
