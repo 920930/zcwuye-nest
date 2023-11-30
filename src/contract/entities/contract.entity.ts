@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, VirtualColumn, ManyToOne, OneToMany, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Room } from '../../room/entities/room.entity';
 import { Company } from '../../company/entities/company.entity';

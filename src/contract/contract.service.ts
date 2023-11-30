@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Like, Repository, FindOptionsWhere } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { resolve } from 'node:path';
@@ -105,14 +105,11 @@ export class ContractService {
     const yyzz = yyzzArr.map((item) => item.slice(len)).join(',');
     contract.yyzz = yyzz.length ? yyzz : null;
     await this.contractRepository.save(contract);
-    // // 删除本地物理路径图片
+    // 删除本地物理路径图片
     const localPth = resolve(__dirname, '../../' + img);
     access(localPth, constants.F_OK, (err) => {
       if (!err) unlinkSync(localPth);
     });
     return `This action removes a #${id} contract`;
   }
-}
-function Where() {
-  throw new Error('Function not implemented.');
 }
