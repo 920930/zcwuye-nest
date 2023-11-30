@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, VirtualColumn, ManyToOne, OneToMany, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Room } from '../../room/entities/room.entity';
 import { Company } from '../../company/entities/company.entity';
@@ -23,7 +23,9 @@ export class Contract {
   })
   yyzz?: string | null;
 
-  @Column()
+  @Column({
+    default: null,
+  })
   oldRooms?: string;
 
   @Column()
@@ -31,6 +33,12 @@ export class Contract {
 
   @Column()
   endTime: string;
+
+  @Column({
+    comment: '合同状态',
+    default: true,
+  })
+  state: boolean;
 
   @ManyToOne(() => User, (user) => user.contracts)
   user: User;
@@ -56,7 +64,7 @@ export class Contract {
 
   @BeforeInsert()
   beforeInsert() {
-    if (this.rooms.length) {
+    if (this.rooms && this.rooms.length) {
       this.oldRooms = oldRoomsFn(this.rooms);
     }
   }
@@ -65,6 +73,9 @@ export class Contract {
   beforeUpdate() {
     if (this.rooms && this.rooms.length) {
       this.oldRooms = oldRoomsFn(this.rooms);
+      this.state = true;
+    } else {
+      this.state = false;
     }
   }
 }

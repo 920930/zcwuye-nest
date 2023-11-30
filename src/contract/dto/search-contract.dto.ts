@@ -1,8 +1,30 @@
-// import { IsString, IsNotEmpty, Length } from 'class-validator';
-import { IsString } from 'class-validator';
-import { SearchUserDto } from '../../user/dto/search-user.dto';
+import { IsNumber, IsOptional, IsPhoneNumber, IsString, Validate } from 'class-validator';
+import { PhoneOrCardDto } from '../../app/dto/phoneOrCard';
+import { Transform } from 'class-transformer';
 
-export class SearchContractDto extends SearchUserDto {
+export class SearchContractDto {
+  @Transform(({ value }) => +value)
+  @IsNumber()
+  companyId: number;
+
   @IsString()
-  companyId: string;
+  @IsOptional()
+  name: string;
+
+  @IsString()
+  @IsOptional()
+  username: string;
+
+  @IsOptional()
+  @IsPhoneNumber('CN')
+  @Validate(PhoneOrCardDto, null, { message: '手机号不正确' })
+  userphone: string;
+
+  @Transform(({ value }) => +value)
+  @IsNumber()
+  page = 1;
+
+  @Transform(({ value }) => +value)
+  @IsNumber()
+  size = 10;
 }

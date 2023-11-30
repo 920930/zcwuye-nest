@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Like, Repository, FindOptionsWhere } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { resolve } from 'node:path';
@@ -25,7 +25,11 @@ export class ContractService {
     private configService: ConfigService,
   ) {}
   async create(createContractDto: CreateContractDto) {
-    const rooms = await this.roomService.findIn(createContractDto.rooms.split(','));
+    const rooms = [];
+    if (createContractDto.rooms.length) {
+      const rooms = await this.roomService.findIn(createContractDto.rooms.split(','));
+      rooms.push(...rooms);
+    }
     const user = await this.userService.findOne(+createContractDto.userId);
     const company = await this.companyService.findOne(+createContractDto.companyId);
     const contract = this.contractRepository.create({ ...createContractDto, rooms, user, company });
@@ -34,31 +38,35 @@ export class ContractService {
   }
 
   findAll(info: SearchContractDto) {
-    return (
-      this.contractRepository
-        .createQueryBuilder('contract')
-        // .leftJoinAndSelect('contract.rooms', 'rooms')
-        .leftJoinAndSelect('contract.user', 'user')
-        .leftJoinAndSelect('contract.company', 'company')
-        .where(info.companyId != '1' && 'contract.companyId = :id', { id: info.companyId })
-        .orderBy('contract.id', 'DESC')
-        .select([
-          'contract.id',
-          'contract.bianma',
-          'contract.name',
-          'contract.oldRooms',
-          'contract.startTime',
-          'contract.endTime',
-          'company.id',
-          'company.name',
-          'user.id',
-          'user.name',
-          'user.phone',
-        ])
-        .skip((+info.page - 1) * +info.size) // 偏移量，跳过的实体数量
-        .take(+info.size) // 分页限制 获取的实体数量
-        .getManyAndCount()
-    );
+    console.log(info);
+    const search = {};
+    info.name && (search['name'] = Like(`%${info.name}%`));
+    // .andWhere('contract.oldRooms IS NOT NULL') 排除空字符串
+    return this.contractRepository
+      .createQueryBuilder('contract')
+      .leftJoinAndSelect('contract.user', 'user')
+      .leftJoinAndSelect('contract.company', 'company')
+      .where('contract.companyId = :id', { id: info.companyId })
+      .andWhere(search)
+      .orderBy('contract.state', 'DESC')
+      .addOrderBy('contract.endTime', 'ASC')
+      .select([
+        'contract.id',
+        'contract.bianma',
+        'contract.name',
+        'contract.oldRooms',
+        'contract.startTime',
+        'contract.endTime',
+        'contract.state',
+        'company.id',
+        'company.name',
+        'user.id',
+        'user.name',
+        'user.phone',
+      ])
+      .skip((info.page - 1) * +info.size) // 偏移量，跳过的实体数量
+      .take(+info.size) // 分页限制 获取的实体数量
+      .getManyAndCount();
   }
 
   findOne(id: number) {
@@ -104,4 +112,7 @@ export class ContractService {
     });
     return `This action removes a #${id} contract`;
   }
+}
+function Where() {
+  throw new Error('Function not implemented.');
 }

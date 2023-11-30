@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, Length } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsOptional } from 'class-validator';
 
 export class CreateContractDto {
   @IsNotEmpty()
@@ -17,6 +17,7 @@ export class CreateContractDto {
   @IsNotEmpty()
   companyId: number;
 
+  @IsOptional()
   @IsString()
   rooms: string;
 
