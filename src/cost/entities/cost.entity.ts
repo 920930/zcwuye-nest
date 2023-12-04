@@ -1,29 +1,34 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { CostType } from '../../app/enum/cost.enum';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 import { Contract } from '../../contract/entities/contract.entity';
+import { CostType } from '../../costype/entities/costype.entity';
+import { Adminer } from '../../adminer/entities/adminer.entity';
 // 收费项目
 @Entity()
 export class Cost {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: 'enum',
-    enum: CostType,
-    default: CostType.WUYE,
-    comment: '1物业费 2押金 3电费 4水费 5垃圾费 6滞纳金 7保险费 8培训费',
-  })
-  type: string;
-
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
+
+  @Column({ comment: '开始时间' })
+  start: string;
+
+  @Column({ comment: '结束时间' })
+  end: string;
+
+  @Column({ comment: '备注说明' })
+  desc: string;
 
   @CreateDateColumn()
   createAt: Date;
 
-  @UpdateDateColumn()
-  updateAt: Date;
-
   @ManyToOne(() => Contract, (contract) => contract.costs)
   contract: Contract;
+
+  @ManyToOne(() => CostType, (costype) => costype.costs)
+  costype: CostType;
+
+  @ManyToOne(() => Adminer, (adminer) => adminer.costs)
+  adminer: Adminer;
 }

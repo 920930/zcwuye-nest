@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, BeforeInsert, BeforeUpdate, OneToMany } from 'typeorm';
 import { hash } from 'argon2';
 import { Company } from '../../company/entities/company.entity';
 import { Role } from '../../role/entities/role.entity';
+import { Cost } from '../../cost/entities/cost.entity';
 
 @Entity()
 export class Adminer {
@@ -31,6 +32,9 @@ export class Adminer {
 
   @ManyToOne(() => Role)
   role: Role;
+
+  @OneToMany(() => Cost, (cost) => cost.adminer)
+  costs: Cost[];
 
   @Column({ default: true, comment: '管理员状态 1正常 0离职' })
   state: boolean;

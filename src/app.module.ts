@@ -18,6 +18,7 @@ import { ContractModule } from './contract/contract.module';
 import { RoomModule } from './room/room.module';
 import { PermissionModule } from './permission/permission.module';
 import { CostModule } from './cost/cost.module';
+import { CostypeModule } from './costype/costype.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { CostModule } from './cost/cost.module';
     RoomModule,
     PermissionModule,
     CostModule,
+    CostypeModule,
   ],
   controllers: [],
   providers: [
