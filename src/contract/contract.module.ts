@@ -54,5 +54,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],
   controllers: [ContractController],
   providers: [ContractService],
+  exports: [ContractService],
 })
 export class ContractModule {}

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, Length, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsOptional, IsDecimal } from 'class-validator';
 
 export class CreateContractDto {
   @IsNotEmpty()
@@ -10,6 +10,12 @@ export class CreateContractDto {
 
   @IsString()
   bianma: string;
+
+  @IsDecimal()
+  area: number;
+
+  @IsDecimal()
+  price: number;
 
   @IsNotEmpty()
   userId: number;

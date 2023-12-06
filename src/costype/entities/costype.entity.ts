@@ -3,12 +3,12 @@ import { Cost } from '../../cost/entities/cost.entity';
 
 // 收费项目
 @Entity()
-export class CostType {
+export class Costype {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ comment: '费用名称' })
-  type: string;
+  title: string;
 
   @Column({ comment: '状态' })
   state: boolean;

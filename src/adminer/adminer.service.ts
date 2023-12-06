@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Adminer } from './entities/adminer.entity';
-import { CreateAdminerDto } from './dto/create-adminer.dto';
-import { UpdateAdminerDto } from './dto/update-adminer.dto';
 import { CompanyService } from '../company/company.service';
 import { RoleService } from '../role/role.service';
+
+import { CreateAdminerDto } from './dto/create-adminer.dto';
+import { UpdateAdminerDto } from './dto/update-adminer.dto';
 
 @Injectable()
 export class AdminerService {
@@ -39,7 +40,7 @@ export class AdminerService {
 
   findOne(id: number) {
     return this.adminerRepository.findOne({
-      where: { id },
+      where: { id, state: true },
       relations: ['role', 'companies'],
     });
     // return this.adminerRepository
@@ -49,6 +50,9 @@ export class AdminerService {
     //   .leftJoinAndSelect('adminer.companies', 'company')
     //   .select(['adminer', 'role.name', 'company.id'])
     //   .getOne();
+  }
+  findUone(id: number) {
+    return this.adminerRepository.findOneBy({ id });
   }
 
   async update(id: number, updateAdminerDto: UpdateAdminerDto) {

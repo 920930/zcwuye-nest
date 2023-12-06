@@ -73,6 +73,10 @@ export class ContractService {
     return this.contractRepository.findOne({ where: { id }, relations: ['rooms', 'user'] });
   }
 
+  findOneToCost(id: number) {
+    return this.contractRepository.findOne({ where: { id } });
+  }
+
   async update(id: number, updateContractDto: UpdateContractDto) {
     Reflect.deleteProperty(updateContractDto, 'id');
     if (updateContractDto.yyzz.length) {

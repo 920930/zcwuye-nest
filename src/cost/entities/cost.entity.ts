@@ -1,7 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, AfterLoad } from 'typeorm';
 import { Contract } from '../../contract/entities/contract.entity';
-import { CostType } from '../../costype/entities/costype.entity';
+import { Costype } from '../../costype/entities/costype.entity';
 import { Adminer } from '../../adminer/entities/adminer.entity';
+
+import * as dayjs from 'dayjs';
 // 收费项目
 @Entity()
 export class Cost {
@@ -20,15 +22,24 @@ export class Cost {
   @Column({ comment: '备注说明' })
   desc: string;
 
-  @CreateDateColumn()
-  createAt: Date;
-
   @ManyToOne(() => Contract, (contract) => contract.costs)
   contract: Contract;
 
-  @ManyToOne(() => CostType, (costype) => costype.costs)
-  costype: CostType;
+  @ManyToOne(() => Costype, (costype) => costype.costs)
+  costype: Costype;
 
   @ManyToOne(() => Adminer, (adminer) => adminer.costs)
   adminer: Adminer;
+
+  @CreateDateColumn()
+  createAt: Date;
+
+  @AfterLoad()
+  afterLoad() {
+    if (this.price) {
+      this.price = +this.price;
+    }
+    // 减去8小时，这是因为typeorm设定了中国时区，daysj默认中国市区+8小时
+    this.createAt = dayjs(this.createAt).subtract(8, 'hour').format('YYYY-MM-DD HH:mm') as unknown as Date;
+  }
 }

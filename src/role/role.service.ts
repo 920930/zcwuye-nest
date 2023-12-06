@@ -11,6 +11,7 @@ import { PermissionService } from '../permission/permission.service';
 export class RoleService {
   constructor(
     @InjectRepository(Role) private roleRepository: Repository<Role>,
+    // 循环依赖，Role依赖Permission，Permission也依赖Role
     @Inject(forwardRef(() => PermissionService)) private permissionService: PermissionService,
   ) {}
   async create(createRoleDto: CreateRoleDto) {

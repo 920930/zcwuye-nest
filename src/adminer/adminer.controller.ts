@@ -7,6 +7,9 @@ import { UpdateAdminerDto } from './dto/update-adminer.dto';
 import { ReqAdminer } from '../app/decorator/public.decorator';
 import { TAdminer } from '../app/enum/typings';
 
+import { Role } from '../app/decorator/role.decorator';
+import { RoleType } from '../app/enum/role.enum';
+
 @Controller('adminer')
 export class AdminerController {
   constructor(private readonly adminerService: AdminerService) {}
@@ -20,11 +23,13 @@ export class AdminerController {
     };
   }
 
+  @Role(RoleType.SUPER)
   @Post()
   create(@Body() createAdminerDto: CreateAdminerDto) {
     return this.adminerService.create(createAdminerDto);
   }
 
+  @Role(RoleType.SUPER)
   @Get()
   findAll() {
     return this.adminerService.findAll();
@@ -35,11 +40,13 @@ export class AdminerController {
     return this.adminerService.findOne(+id);
   }
 
+  @Role(RoleType.SUPER)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAdminerDto: UpdateAdminerDto) {
     return this.adminerService.update(+id, updateAdminerDto);
   }
 
+  @Role(RoleType.SUPER)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.adminerService.remove(+id);

@@ -2,6 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Upl
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 
+import { Role } from '../app/decorator/role.decorator';
+import { RoleType } from '../app/enum/role.enum';
+
 import { ContractService } from './contract.service';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
@@ -12,6 +15,7 @@ export class ContractController {
   constructor(private readonly contractService: ContractService, private configService: ConfigService) {}
 
   // contract.module配置 UploadedFiles 上传
+  @Role(RoleType.ADMIN, RoleType.CAIWU)
   @Post()
   @UseInterceptors(FilesInterceptor('files'))
   create(@Body() createContractDto: CreateContractDto, @UploadedFiles() files: Array<Express.Multer.File>) {
@@ -45,6 +49,7 @@ export class ContractController {
   }
 
   // contract.module配置 UploadedFiles 上传
+  @Role(RoleType.ADMIN, RoleType.CAIWU)
   @Patch(':id')
   @UseInterceptors(FilesInterceptor('files'))
   update(@Param('id') id: string, @Body() updateContractDto: UpdateContractDto, @UploadedFiles() files: Array<Express.Multer.File>) {
@@ -61,11 +66,13 @@ export class ContractController {
     return this.contractService.update(+id, updateContractDto);
   }
 
+  @Role(RoleType.ADMIN, RoleType.CAIWU)
   @Delete('img')
   removeImg(@Query() info: { id: string; img: string }) {
     return this.contractService.removeImg(+info.id, info.img);
   }
 
+  @Role(RoleType.ADMIN, RoleType.CAIWU)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.contractService.remove(+id);

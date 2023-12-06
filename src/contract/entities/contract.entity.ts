@@ -72,6 +72,12 @@ export class Contract {
         .map((item) => `${host}/${item}`)
         .join(',');
     }
+    if (this.price) {
+      this.price = +this.price;
+    }
+    if (this.area) {
+      this.area = +this.area;
+    }
   }
 
   @BeforeInsert()
