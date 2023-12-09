@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, AfterLoad } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, AfterLoad, UpdateDateColumn } from 'typeorm';
 import { Contract } from '../../contract/entities/contract.entity';
 import { Costype } from '../../costype/entities/costype.entity';
 import { Adminer } from '../../adminer/entities/adminer.entity';
@@ -14,10 +14,10 @@ export class Cost {
   price: number;
 
   @Column({ comment: '开始时间' })
-  start: string;
+  start?: string;
 
   @Column({ comment: '结束时间' })
-  end: string;
+  end?: string;
 
   @Column({ comment: '备注说明' })
   desc: string;
@@ -33,6 +33,9 @@ export class Cost {
 
   @CreateDateColumn()
   createAt: Date;
+
+  @UpdateDateColumn()
+  updateAt: Date;
 
   @AfterLoad()
   afterLoad() {

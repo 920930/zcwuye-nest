@@ -15,11 +15,5 @@ export class CreateRoomDto {
   num: string;
 
   @IsNumber()
-  area: number;
-
-  @IsNumber()
-  price: number;
-
-  @IsNumber()
   companyId: number;
 }

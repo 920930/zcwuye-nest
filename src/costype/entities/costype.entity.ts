@@ -10,6 +10,9 @@ export class Costype {
   @Column({ comment: '费用名称' })
   title: string;
 
+  @Column({ comment: '是否有时间区间', default: true })
+  dtime: boolean;
+
   @Column({ comment: '状态' })
   state: boolean;
 
