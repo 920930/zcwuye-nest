@@ -18,6 +18,6 @@ export class Conlist {
   @Column({ type: 'decimal', precision: 6, scale: 2, comment: '月租金' })
   price: number;
 
-  @ManyToOne(() => Contract, (contract) => contract.conlists);
+  @ManyToOne(() => Contract, (contract) => contract.conlists)
   contract: Contract;
 }
