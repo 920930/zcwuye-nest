@@ -19,6 +19,7 @@ import { RoomModule } from './room/room.module';
 import { PermissionModule } from './permission/permission.module';
 import { CostModule } from './cost/cost.module';
 import { CostypeModule } from './costype/costype.module';
+import { ConlistModule } from './conlist/conlist.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { CostypeModule } from './costype/costype.module';
     PermissionModule,
     CostModule,
     CostypeModule,
+    ConlistModule,
   ],
   controllers: [],
   providers: [

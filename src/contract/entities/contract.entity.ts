@@ -7,6 +7,7 @@ import { User } from '../../user/entities/user.entity';
 import { Room } from '../../room/entities/room.entity';
 import { Company } from '../../company/entities/company.entity';
 import { Cost } from '../../cost/entities/cost.entity';
+import { Conlist } from '../../conlist/entities/conlist.entity';
 
 // 合同
 @Entity()
@@ -57,6 +58,9 @@ export class Contract {
 
   @OneToMany(() => Room, (room) => room.contract)
   rooms: Room[];
+
+  @OneToMany(() => Conlist, (list) => list.contract)
+  conlists: Conlist[];
 
   @ManyToOne(() => Company, (company) => company.contract)
   company: Company;
