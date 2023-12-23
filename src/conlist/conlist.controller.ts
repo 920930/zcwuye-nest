@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ConlistService } from './conlist.service';
 import { CreateConlistDto } from './dto/create-conlist.dto';
 import { UpdateConlistDto } from './dto/update-conlist.dto';
@@ -13,8 +13,8 @@ export class ConlistController {
   }
 
   @Get()
-  findAll() {
-    return this.conlistService.findAll();
+  findAll(@Query() info: { contractId: string; page: string; size: string }) {
+    return this.conlistService.findAll(+info.contractId, +info.page, +info.size);
   }
 
   @Get(':id')
@@ -24,6 +24,7 @@ export class ConlistController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateConlistDto: UpdateConlistDto) {
+    console.log(id, 123);
     return this.conlistService.update(+id, updateConlistDto);
   }
 

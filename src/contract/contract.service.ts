@@ -73,7 +73,7 @@ export class ContractService {
     return this.contractRepository.findOne({ where: { id }, relations: ['rooms', 'user'] });
   }
 
-  findOneToCost(id: number) {
+  findOneOnly(id: number) {
     return this.contractRepository.findOne({ where: { id } });
   }
 

@@ -14,10 +14,10 @@ export class Cost {
   price: number;
 
   @Column({ comment: '开始时间' })
-  start?: string;
+  start: string;
 
   @Column({ comment: '结束时间' })
-  end?: string;
+  end: string;
 
   @Column({ comment: '备注说明' })
   desc: string;

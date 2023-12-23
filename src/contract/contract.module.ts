@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as dayjs from 'dayjs';
 import { join } from 'path';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { Contract } from './entities/contract.entity';
 import { ContractService } from './contract.service';
@@ -12,7 +13,7 @@ import { ContractController } from './contract.controller';
 import { UserModule } from '../user/user.module';
 import { RoomModule } from '../room/room.module';
 import { CompanyModule } from '../company/company.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConlistModule } from '../conlist/conlist.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     UserModule,
     RoomModule,
     CompanyModule,
+    forwardRef(() => ConlistModule),
     MulterModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -34,7 +36,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         }),
         dest: `${dayjs().year()}`,
         // fileFilter(req, file, callback) {
-        //   // 对上传文件的验证，比如对文件类型只能是图片类型的验证
+        // 对上传文件的验证，比如对文件类型只能是图片类型的验证
         //   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
         //     return callback(new Error('Only image files are allowed!'), false);
         //   }

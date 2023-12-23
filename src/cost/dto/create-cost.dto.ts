@@ -10,10 +10,10 @@ export class CreateCostDto {
   price: number;
 
   @IsString()
-  start: string;
+  start?: string;
 
   @IsString()
-  end: string;
+  end?: string;
 
   @IsString()
   desc: string;

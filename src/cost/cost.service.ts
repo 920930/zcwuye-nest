@@ -10,7 +10,6 @@ import { SearchCostDto } from './dto/search-cost.dto';
 
 import { ContractService } from '../contract/contract.service';
 import { CostypeService } from '../costype/costype.service';
-import { AdminerService } from '../adminer/adminer.service';
 import { RoleType } from '../app/enum/role.enum';
 
 @Injectable()
@@ -19,7 +18,6 @@ export class CostService {
     @InjectRepository(Cost) private costRepository: Repository<Cost>,
     private contractService: ContractService,
     private costypeService: CostypeService,
-    private adminerService: AdminerService,
   ) {}
   async create(createCostDto: CreateCostDto, adminer: any) {
     const contract = await this.contractService.findOne(createCostDto.contractId);
@@ -35,7 +33,6 @@ export class CostService {
   }
 
   async findAll(info: SearchCostDto) {
-    console.log(info);
     return this.costRepository
       .createQueryBuilder('cost')
       .leftJoinAndSelect('cost.costype', 'costype')
