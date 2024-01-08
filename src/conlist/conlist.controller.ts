@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFiles, ParseIntPipe } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ConfigService } from '@nestjs/config';
+
 import { ConlistService } from './conlist.service';
 import { CreateConlistDto } from './dto/create-conlist.dto';
 import { UpdateConlistDto } from './dto/update-conlist.dto';
 
 @Controller('conlist')
 export class ConlistController {
-  constructor(private readonly conlistService: ConlistService) {}
+  constructor(private readonly conlistService: ConlistService, private configService: ConfigService) {}
 
   @Post()
   create(@Body() createConlistDto: CreateConlistDto) {
@@ -22,9 +25,20 @@ export class ConlistController {
     return this.conlistService.findOne(+id);
   }
 
+  @Post('upload/:id')
+  @UseInterceptors(FilesInterceptor('file'))
+  upload(@Param('id', ParseIntPipe) id: number, @UploadedFiles() file: Array<Express.Multer.File>) {
+    const ret: string[] = [];
+    file.forEach((file) => {
+      const arr = file.path.split(this.configService.get<string>('MULTER_DEST'));
+      const u = this.configService.get<string>('MULTER_DEST') + arr[1].replaceAll(/(\\)|(\/\/)/g, '/');
+      ret.push(u);
+    });
+    return this.conlistService.updateAndFile(id, ret);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateConlistDto: UpdateConlistDto) {
-    console.log(id, 123);
     return this.conlistService.update(+id, updateConlistDto);
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -32,7 +32,18 @@ export class ConlistService {
   }
 
   findOne(id: number) {
+    return this.conlistRepository.findOneBy({ id });
     return `This action returns a #${id} conlist`;
+  }
+
+  async updateAndFile(id: number, files: string[]) {
+    const con = await this.conlistRepository.findOneBy({ id });
+    if (!con) {
+      throw new ForbiddenException('不存在');
+    }
+    con.imgs && files.unshift(...con.imgs);
+    await this.conlistRepository.update(id, { imgs: files });
+    return `This action updates a #${id} conlist`;
   }
 
   async update(id: number, updateConlistDto: UpdateConlistDto) {
