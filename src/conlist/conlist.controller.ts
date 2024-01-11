@@ -25,7 +25,7 @@ export class ConlistController {
     return this.conlistService.findOne(+id);
   }
 
-  @Post('upload/:id')
+  @Post('upfile/:id')
   @UseInterceptors(FilesInterceptor('file'))
   upload(@Param('id', ParseIntPipe) id: number, @UploadedFiles() file: Array<Express.Multer.File>) {
     const ret: string[] = [];
@@ -42,8 +42,13 @@ export class ConlistController {
     return this.conlistService.update(+id, updateConlistDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('rmfile/:id')
+  removeFile(@Param('id') id: string) {
     return this.conlistService.remove(+id);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string, @Query('img') mg: string) {
+    return this.conlistService.remove(+id, mg);
   }
 }

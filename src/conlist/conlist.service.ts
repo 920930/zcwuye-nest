@@ -1,6 +1,8 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { resolve } from 'node:path';
+import { access, constants, unlinkSync } from 'node:fs';
 
 import { Conlist } from './entities/conlist.entity';
 
@@ -41,7 +43,14 @@ export class ConlistService {
     if (!con) {
       throw new ForbiddenException('不存在');
     }
-    con.imgs && files.unshift(...con.imgs);
+    let imgs = [];
+    if (con.imgs) {
+      imgs = con.imgs.map((item) => {
+        const arr = item.split('uploads');
+        return `uploads${arr[1]}`;
+      });
+      files.unshift(...imgs);
+    }
     await this.conlistRepository.update(id, { imgs: files });
     return `This action updates a #${id} conlist`;
   }
@@ -52,8 +61,23 @@ export class ConlistService {
     return `This action updates a #${id} conlist`;
   }
 
-  async remove(id: number) {
-    await this.conlistRepository.delete(id);
+  async remove(id: number, img = '') {
+    if (img) {
+      const conl = await this.conlistRepository.findOneBy({ id });
+      const val = conl.imgs.filter((item) => item.includes(img));
+      if (!val.length) return;
+      // 删除数据库中的
+      conl.imgs = conl.imgs.filter((item) => !item.includes(img));
+      await this.conlistRepository.save(conl);
+      // 删除本地物理路径图片
+      const value = val[0].split('uploads')[1];
+      const localPth = resolve(__dirname, '../../uploads' + value);
+      access(localPth, constants.F_OK, (err) => {
+        if (!err) unlinkSync(localPth);
+      });
+    } else {
+      // await this.conlistRepository.delete(id);
+    }
     return `This action removes a #${id} conlist`;
   }
 }
